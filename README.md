@@ -1,129 +1,99 @@
-# NovaMart
+# NovaMart - Premium E-Commerce Platform
 
-Production-ready full-stack e-commerce platform using **Next.js 15 + React + TypeScript + Tailwind CSS** (frontend) and **Node.js + Express + MongoDB + JWT + Stripe** (backend).
+Full-stack e-commerce platform built with **Next.js 14**, **React**, **TypeScript**, **Node.js**, **MongoDB**, **Stripe**, and **Tailwind CSS**.
 
 ## Features
 
-- Modern responsive storefront
-- Homepage: hero, featured products, categories, best sellers, testimonials, newsletter
-- Product listing with search, filters, sorting, pagination
-- Product details with reviews, ratings, related products, add to cart and buy now
-- Shopping cart and checkout (Stripe-ready)
-- User auth (register/login with JWT)
-- User dashboard, wishlist, order tracking
-- Contact, About, FAQ pages
-- Admin dashboard: product/category/order/customer/review/sales analytics modules
-- Dark mode, SEO metadata, image optimization
-- Multi-language and currency switcher
-- Inventory + invoice-ready order model
+- Product catalog with categories, search, and filtering
+- Shopping cart with persistent localStorage
+- Secure checkout with Stripe payment integration
+- User authentication (email/password)
+- Order management and tracking
+- Admin dashboard with analytics
+- Product reviews and ratings
+- Wishlist functionality
+- Responsive mobile-first design
+- Dark mode ready
 
----
+## Tech Stack
 
-## Monorepo Structure
-
-```bash
-NovaMart/
-├── frontend/                 # Next.js 15 storefront
-│   ├── src/app/              # App Router pages
-│   ├── src/components/       # Reusable UI components
-│   ├── src/context/          # Global client state (cart/wishlist/theme/lang/currency)
-│   └── src/lib/              # Shared frontend data/types
-├── backend/                  # Express + TypeScript API
-│   ├── src/config/           # Env + DB config
-│   ├── src/controllers/      # Route handlers
-│   ├── src/middleware/       # Auth/error middleware
-│   ├── src/models/           # Mongoose schemas
-│   ├── src/routes/           # REST routes
-│   ├── src/services/         # Stripe/JWT helpers
-│   └── src/utils/            # Async utilities
-└── package.json              # Workspaces + top-level scripts
-```
-
----
+| Layer | Technology |
+|-------|-----------|
+| Frontend | Next.js 14, React 18, TypeScript, Tailwind CSS |
+| Backend | Next.js API Routes, Server Components |
+| Database | MongoDB with Mongoose |
+| Auth | JWT-based authentication |
+| Payments | Stripe |
+| Charts | Chart.js + react-chartjs-2 |
+| Icons | React Icons |
 
 ## Quick Start
 
-### 1) Install dependencies
-
 ```bash
+# Clone & install
+cd NovaMart
 npm install
-```
 
-### 2) Environment setup
+# Set up environment
+cp .env.example .env.local
+# Edit .env.local with your MongoDB URI and Stripe keys
 
-```bash
-cp frontend/.env.example frontend/.env.local
-cp backend/.env.example backend/.env
-```
+# Seed database
+npm run seed
 
-### 3) Run in development
-
-```bash
+# Start development server
 npm run dev
 ```
 
-- Frontend: `http://localhost:3000`
-- Backend: `http://localhost:5000`
+Visit `http://localhost:3000`
 
----
+## Seed Data
 
-## Scripts
+The seed script creates:
 
-At repo root:
+- **Admin:** admin@novamart.com / Admin123!
+- **Test User:** test@novamart.com / Test1234!
+- **7 categories** (Electronics, Clothing, Home & Kitchen, Books, Sports, Beauty, Toys)
+- **10 products** with images, prices, ratings, and stock
 
-```bash
-npm run dev      # run frontend + backend
-npm run build    # build frontend and backend
-npm run lint     # lint frontend
-npm run test     # backend placeholder test script
+## Project Structure
+
+```
+NovaMart/
+├── src/
+│   ├── app/                    # Next.js App Router
+│   │   ├── page.tsx            # Home page
+│   │   ├── products/           # Product listing & detail
+│   │   ├── checkout/           # Checkout flow
+│   │   ├── auth/               # Login & register
+│   │   ├── account/            # User account
+│   │   ├── orders/             # Order details
+│   │   ├── admin/              # Admin dashboard
+│   │   └── api/                # API routes
+│   ├── components/
+│   │   ├── layout/             # Navbar, Footer
+│   │   ├── product/            # ProductCard
+│   │   └── cart/               # CartDrawer
+│   ├── lib/                    # Utilities, DB, Stripe, Auth
+│   ├── models/                 # Mongoose models
+│   └── types/                  # TypeScript types
+├── public/
+└── package.json
 ```
 
----
+## API Endpoints
 
-## API Overview
-
-Base URL: `/api`
-
-### Auth
-- `POST /auth/register`
-- `POST /auth/login`
-
-### Products
-- `GET /products?search=&category=&sort=&page=&limit=`
-- `GET /products/:slug`
-
-### Orders
-- `POST /orders/checkout` (JWT required, Stripe PaymentIntent)
-- `GET /orders/my-orders` (JWT required)
-
-### Admin
-- `GET /admin/metrics` (JWT + admin role required)
-
----
-
-## Core MongoDB Models
-
-- **User**: profile, credentials, role, addresses, language/currency preferences
-- **Category**: category metadata + slug
-- **Product**: pricing, inventory, tags, featured/bestseller flags, reviews/ratings
-- **Order**: items, shipping, payment status, order status, invoice number, totals
-- **Wishlist**: user-saved product references
-
----
-
-## Deployment Notes
-
-### Frontend (Vercel)
-- Set `NEXT_PUBLIC_API_URL`
-- Build command: `npm run build --workspace frontend`
-
-### Backend (Render/Railway/Fly.io)
-- Set all variables from `backend/.env.example`
-- Build command: `npm run build --workspace backend`
-- Start command: `npm run start --workspace backend`
-
-### Database & Payments
-- Use managed MongoDB Atlas cluster
-- Use Stripe live/test keys per environment
-- Set CORS `FRONTEND_URL` to deployed frontend domain
-
+| Method | Endpoint | Description |
+|--------|----------|-------------|
+| POST | /api/auth/login | Login |
+| POST | /api/auth/register | Register |
+| GET | /api/products | List products (paginated, filterable) |
+| GET | /api/products/:id | Get product detail |
+| POST | /api/checkout | Create order |
+| POST | /api/checkout/stripe | Create payment intent |
+| GET | /api/orders | List user orders |
+| GET | /api/admin | Admin dashboard stats |
+| POST | /api/reviews | Submit review |
+| GET | /api/users/profile | Get profile |
+| PUT | /api/users/profile | Update profile |
+| POST | /api/webhooks/stripe | Stripe webhook |
